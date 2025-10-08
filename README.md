@@ -24,7 +24,15 @@ This card brings out the full potential of touch control for Home Assistant:
 - ⚙️ Extensive action configuration and firing support - this card can be used to control your Apple TV, 3D printer, shades, or anything else that can be configured through a Home Assistant action configuration flow.
 - 🧩 Compatibility with the modular and grid based approach to section layouts to which Home Assistant UI focus has shifted - Supported!
 
-I'm not a professional developer, but I (re)learned enough JavaScript and AI prompting to create this fully functional card. I'm certain many optimizations are possible, but it's in operation for me in 3 separate rooms and working well. I'm releasing this as a private beta to collect feedback and make any ***critical*** fixes before a more public release.
+I'm not a professional developer, but I (re)learned enough JavaScript and AI prompting to create this fully functional card. I'm certain many optimizations are possible, but it's in operation for me in 3 separate rooms* and working well. I'm releasing this as a private beta to collect feedback and make any ***critical*** fixes before a more public release.
+
+<details>
+<summary>(click to expand) * This is my living room dashboard view.</summary> With the AV system off, there's a single button titled 'Watch TV' where you currently see 'Blackout Lights' leaving a clean Living Room view to control lights, etc. When I click that button, it's replaced with everything you see in this screenshot including the touchpad card and the light, etc. shift down to accommodate. Notice how seamless it integrates with the rest of the tile buttons. All tap and cardinal linear controls do what you would expect except maybe that a double-tap mutes the receiver. Circular interactions turn the volume up/down. If I double-tap before a circular interaction, I'm controlling the living room lights' brightness instead. The diagonal linear controls, two finger linear, and pinch in/out interactions are (IMO) mapped more intuitively than the Apple TV Remote itself. Of course, the two things missing that I don't know could ever be replicated in a Home Assistant remote are voice commands and a keyboard, so I tend to use this primarily and the Apple TV remote as necessary.
+<p align="center">
+  <img src="images/TouchpadCardScreenshot_DashboardRemote.png" alt="Quick Action Editor" width="400"><br>
+  <em>Quick Action Editor</em>
+</p>
+</details>
 
 ## Features
 
