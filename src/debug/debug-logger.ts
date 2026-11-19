@@ -206,44 +206,6 @@ export class DebugLogger {
     console.groupEnd();
   }
 
-  formatTarget(target) {
-    if (!target.entity) return 'none';
-    const isDefault = target.isDefault || false;
-    return isDefault ? `${target.entity} (Default)` : target.entity;
-  }
-
-  formatCommandSummary(action) {
-    let summary = '';
-    
-    const actionType = action.action || action.type;
-    if (actionType === 'perform_action') {
-      const data = action.data || {};
-      const target = action.target || {};
-      const dataKeys = Object.keys(data);
-      const targetKeys = Object.keys(target);
-      
-      if (dataKeys.length === 0 && targetKeys.length === 0) {
-        summary = 'MISSING';
-      } else {
-        const parts = [];
-        if (dataKeys.length > 0) parts.push(`data:${dataKeys.join(',')}`);
-        if (targetKeys.length > 0) parts.push(`target:${targetKeys.join(',')}`);
-        summary = parts.join(' ');
-      }
-    } else if (actionType === 'call_service' || actionType === 'service') {
-      const data = action.service_data || {};
-      const dataKeys = Object.keys(data);
-      
-      if (dataKeys.length === 0) {
-        summary = 'MISSING';
-      } else {
-        summary = `data:${dataKeys.join(',')}`;
-      }
-    }
-    
-    return summary;
-  }
-
   serviceRequiresData(serviceName) {
     // Services that typically work without data
     const noDataServices = [

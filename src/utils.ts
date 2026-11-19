@@ -48,13 +48,13 @@ Object.values(INTERACTION).forEach(category => {
  * 
  * @param {Object} cardConfig - The card configuration object
  * @param {string} category - Interaction category (e.g., 'tap', 'linear', 'multi')
- * @param {string} property - Property name (e.g., 'threshold', 'timer_single')
+ * @param {string} property - Property name (e.g., 'threshold', 'timer_double')
  * @param {*} constantValue - Default value from INTERACTION constants
  * @param {*} [fallback=constantValue] - Ultimate fallback value if all else fails
  * @returns {*} Resolved configuration value following the priority chain
  * @example
  * // Resolves tap timer with fallback chain
- * const timer = resolveConfigValue(config, 'tap', 'timer_single', INTERACTION.TAP.TIMER_SINGLE_DEFAULT);
+ * const timer = resolveConfigValue(config, 'tap', 'timer_double', INTERACTION.TAP.TIMER_DOUBLE_DEFAULT);
  */
 export function resolveConfigValue(cardConfig, category, property, constantValue, fallback = constantValue) {
   // Resolve the value using priority chain

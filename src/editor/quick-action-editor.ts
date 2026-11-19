@@ -6,14 +6,14 @@ import { ICON } from '../const';
  * Provides streamlined interface for configuring service calls, entity actions, and navigation commands
  * within TouchpadCard interaction configurations. Supports domain/service selection, entity targeting,
  * and dynamic service data configuration.
- * 
+ *
  * Features:
  * - Domain and service selection with auto-completion
  * - Entity targeting and validation
  * - Dynamic service data field generation
  * - Home Assistant action type support
  * - Integrated validation and feedback
- * 
+ *
  * @class InteractionActionEditor
  * @extends {LitElement}
  */
@@ -308,7 +308,7 @@ export class InteractionActionEditor extends LitElement {
   /**
    * Initializes the InteractionActionEditor with default state and available interaction configurations.
    * Sets up internal tracking for domain/service selection, entity targeting, and raw data preservation.
-   * 
+   *
    * @constructor
    */
   constructor() {
@@ -321,13 +321,12 @@ export class InteractionActionEditor extends LitElement {
     // faithfully restore it when reopening without lossy re-formatting.
     this._rawData = {};
     this._interactions = this._getAvailableInteractions();
-    // console.log('InteractionActionEditor: Loaded interactions:', this._interactions);
   }
 
   /**
    * Handles component connection to the DOM and performs initial configuration setup.
    * Initializes editor state based on current configuration when first mounted.
-   * 
+   *
    * @override
    */
   connectedCallback() {
@@ -338,7 +337,7 @@ export class InteractionActionEditor extends LitElement {
   /**
    * Handles property updates and triggers configuration reinitialization when needed.
    * Responds to configuration changes by updating internal state and UI elements.
-   * 
+   *
    * @param {Map<string, *>} changedProperties - Map of changed properties with previous values
    * @override
    */
@@ -395,7 +394,7 @@ export class InteractionActionEditor extends LitElement {
 
     this._interactions.forEach(interaction => {
       const action = this.config.interactions?.[interaction.category]?.[interaction.actionKey];
-      
+
       if (action) {
         // Handle both old call-service format and new perform-action format
         let serviceValue = '';
@@ -435,7 +434,7 @@ export class InteractionActionEditor extends LitElement {
     // Second pass: only extract data for interactions that match the common service and entity
     this._interactions.forEach(interaction => {
       const action = this.config.interactions?.[interaction.category]?.[interaction.actionKey];
-      
+
       if (action) {
         // Handle both old call-service format and new perform-action format
         let serviceValue = '';
@@ -462,7 +461,7 @@ export class InteractionActionEditor extends LitElement {
    */
   _getAvailableInteractions() {
     const interactions = [];
-    
+
     // Tap interactions
     [
       { key: 'tap', actionKey: 'tap_action' },
@@ -563,7 +562,7 @@ export class InteractionActionEditor extends LitElement {
   _handleDataChange(ev) {
     const interaction = ev.target.getAttribute('data-interaction');
     const data = ev.target.value;
-    
+
     this._data = {
       ...this._data,
       [interaction]: data
@@ -585,9 +584,9 @@ export class InteractionActionEditor extends LitElement {
       return;
     }
 
-    // Build the updated config
-    const updatedConfig = { ...this.config };
-    
+    // Build the updated config on a copy so the current config is never changed in place
+    const updatedConfig = structuredClone(this.config ?? {});
+
     // Ensure interactions structure exists
     if (!updatedConfig.interactions) {
       updatedConfig.interactions = {};
@@ -601,7 +600,7 @@ export class InteractionActionEditor extends LitElement {
     // Apply data to each interaction
     this._interactions.forEach(interaction => {
       const dataValue = this._data[interaction.key];
-      
+
       // Skip interactions that have conflicting configurations (different service/entity)
       // BUT only if their data field is empty (indicating user wants to preserve existing config)
       const conflict = this._getInteractionConfigConflict(interaction);
@@ -614,7 +613,7 @@ export class InteractionActionEditor extends LitElement {
       if (!updatedConfig.interactions[interaction.category]) {
         updatedConfig.interactions[interaction.category] = {};
       }
-      
+
       if (dataValue && dataValue.trim()) {
         // Parse the data value - try to parse as YAML/JSON, otherwise use as raw data
         let parsedData;
@@ -640,12 +639,12 @@ export class InteractionActionEditor extends LitElement {
             entity_id: this._entity
           }
         };
-        
+
         updatedConfig.interactions[interaction.category][interaction.actionKey] = actionConfig;
       } else {
         // If data field is empty, remove the action configuration
         delete updatedConfig.interactions[interaction.category][interaction.actionKey];
-        
+
         // Clean up empty category objects
         if (Object.keys(updatedConfig.interactions[interaction.category]).length === 0) {
           delete updatedConfig.interactions[interaction.category];
@@ -662,14 +661,6 @@ export class InteractionActionEditor extends LitElement {
     // Keep editor open for further edits; do NOT auto-close.
     // Provide subtle visual feedback by forcing an update (could later add toast/snackbar).
     this.requestUpdate();
-  }
-
-  _handleClose() {
-    this.visible = false;
-    this.dispatchEvent(new CustomEvent('editor-closed', {
-      bubbles: true,
-      composed: true
-    }));
   }
 
   /**
@@ -696,28 +687,28 @@ export class InteractionActionEditor extends LitElement {
   _parseSimpleYaml(input) {
     const result = {};
     const lines = input.split('\n');
-    
+
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) continue;
-      
+
       const colonIndex = trimmed.indexOf(':');
       if (colonIndex === -1) continue;
-      
+
       const key = trimmed.substring(0, colonIndex).trim();
       const value = trimmed.substring(colonIndex + 1).trim();
-      
+
       if (key && value) {
         // Try to parse value as number, boolean, or keep as string
         let parsedValue = value;
         if (value === 'true') parsedValue = true;
         else if (value === 'false') parsedValue = false;
         else if (!isNaN(value) && !isNaN(parseFloat(value))) parsedValue = parseFloat(value);
-        
+
         result[key] = parsedValue;
       }
     }
-    
+
     return result;
   }
 
@@ -766,7 +757,7 @@ export class InteractionActionEditor extends LitElement {
     for (const interaction of this._interactions) {
       const conflict = this._getInteractionConfigConflict(interaction);
       const hasUserInput = this._data[interaction.key] && this._data[interaction.key].trim();
-      
+
       // Skip interactions that have conflicting configurations AND no user input
       if (conflict && (conflict.reasons.serviceDiff || conflict.reasons.entityDiff) && !hasUserInput) {
         // Skip this interaction - it won't be affected by QAC operations
@@ -776,7 +767,7 @@ export class InteractionActionEditor extends LitElement {
       const action = this.config.interactions?.[interaction.category]?.[interaction.actionKey];
       const currentData = this._data[interaction.key] || '';
       const configData = action?.data ? this._serializeDataForInput(action.data) : '';
-      
+
       if (currentData !== configData) return false;
     }
 
@@ -825,7 +816,7 @@ export class InteractionActionEditor extends LitElement {
   }
 
   /** Render a single interaction row
-   * 
+   *
   */
   _renderInteractionRow(interaction) {
     const conflict = this._getInteractionConfigConflict(interaction);
@@ -889,12 +880,12 @@ export class InteractionActionEditor extends LitElement {
     return this._interactions.some(interaction => {
       const conflict = this._getInteractionConfigConflict(interaction);
       const hasUserInput = this._data[interaction.key] && this._data[interaction.key].trim();
-      
+
       // Skip interactions that have conflicting configurations AND no user input
       if (conflict && (conflict.reasons.serviceDiff || conflict.reasons.entityDiff) && !hasUserInput) {
         return false; // Don't count this interaction
       }
-      
+
       return hasUserInput;
     });
   }

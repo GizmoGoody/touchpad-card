@@ -157,7 +157,6 @@ interactions:
   tap:
 
     tuning: # Tap Tuning
-      timer_single: 300 # Minimum tap to trigger as a tap (ms)
       timer_double: 400 # Maximum time between taps to trigger a double tap (ms)
       timer_hold: 800 # Minimum tap duration to trigger a hold (ms)
 

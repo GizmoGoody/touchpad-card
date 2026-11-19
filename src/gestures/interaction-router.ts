@@ -1,4 +1,4 @@
-import { INTERACTION, PERFORMANCE } from '../const';
+import { INTERACTION } from '../const';
 import { getAngle, getDistance, normalizeAngle, resolveConfigValue } from '../utils';
 
 /**
@@ -18,8 +18,6 @@ import { getAngle, getDistance, normalizeAngle, resolveConfigValue } from '../ut
 export class InteractionRouter {
   // Instance fields (declared for TypeScript; assigned at runtime)
   callbacks: any;
-  centerHistory: any;
-  centerHistoryMaxLength: any;
   circularActionsFired: any;
   circularAngleRemainder: any;
   circularAngleTotal: any;
@@ -111,11 +109,6 @@ export class InteractionRouter {
     // Configuration map for all interaction properties
     const CONFIG_MAP = {
       // Tap properties
-      tapTimerSingle: { 
-        category: 'tap', 
-        property: 'timer_single', 
-        default: INTERACTION.TAP.TIMER_SINGLE_DEFAULT 
-      },
       tapTimerDouble: { 
         category: 'tap', 
         property: 'timer_double', 
@@ -904,9 +897,6 @@ export class InteractionRouter {
     this.isDoubleCircular = !!this.doubleTapActive;
 
     
-    // Initialize center history with current center
-    this.centerHistory = [{ ...this.circularCenter }];
-    
     // Reset angle accumulation for threshold counting
     this.circularAngleRemainder = 0;  // Track remainder after threshold subtractions
     this.circularAngleTotal = 0;  // Track total accumulated angle across all increments
@@ -964,33 +954,6 @@ export class InteractionRouter {
     else if (significantMovement) {
       this.circularCurrentAngle = normalizedCurrentAngle;
     }
-  }
-
-  updateMovingAverageCenter(pointer) {
-    // Add current pointer position to history
-    this.centerHistory.push({ x: pointer.x, y: pointer.y });
-    
-    // Keep only the last N positions for moving average
-    if (this.centerHistory.length > this.centerHistoryMaxLength) {
-      this.centerHistory.shift();
-    }
-  }
-
-  getMovingAverageCenter() {
-    if (this.centerHistory.length === 0) {
-      return this.circularCenter;
-    }
-    
-    // Calculate average of all positions in history
-    const sum = this.centerHistory.reduce(
-      (acc, pos) => ({ x: acc.x + pos.x, y: acc.y + pos.y }), 
-      { x: 0, y: 0 }
-    );
-    
-    return {
-      x: sum.x / this.centerHistory.length,
-      y: sum.y / this.centerHistory.length
-    };
   }
 
   fireCircularInteraction() {
@@ -1143,8 +1106,6 @@ export class InteractionRouter {
     
     // Enhanced circular tracking
     this.latchedDirection = null;
-    this.centerHistory = [];
-    this.centerHistoryMaxLength = PERFORMANCE.MAX_POINTER_HISTORY;
     
     // Multi-touch interaction state
     this.multiPointers = [];
