@@ -1,5 +1,4 @@
 import { INTERACTION } from './const';
-import { configCache } from './performance';
 
 // #region ===== UTILITY FUNCTIONS =====
 
@@ -29,24 +28,23 @@ export function getClampedNumber(value, min, max) {
  * const interactions = getInteractions();
  */
 export function getInteractions() {
-  const allTypes = {};
-  
-  // Collect interaction objects from each interaction category
-  Object.values(INTERACTION).forEach(category => {
-    Object.entries(category).forEach(([key, value]) => {
-      // Only include objects that have interaction properties (mode, etc.)
-      if (typeof value === 'object' && value.mode) {
-        allTypes[key] = value;
-      }
-    });
-  });
-  
-  return allTypes;
+  return ALL_INTERACTIONS;
 }
+
+// The INTERACTION constants never change, so the flat lookup is built once at load.
+const ALL_INTERACTIONS: Record<string, { mode: string; icon: string }> = {};
+Object.values(INTERACTION).forEach(category => {
+  Object.entries(category).forEach(([key, value]) => {
+    // Only include objects that have interaction properties (mode, etc.)
+    if (typeof value === 'object' && value.mode) {
+      ALL_INTERACTIONS[key] = value;
+    }
+  });
+});
 
 /**
  * Central configuration resolution system that resolves values using a priority chain:
- * Card Config → Constants → Fallback. Implements caching for improved performance.
+ * Card Config → Constants → Fallback.
  * 
  * @param {Object} cardConfig - The card configuration object
  * @param {string} category - Interaction category (e.g., 'tap', 'linear', 'multi')
@@ -59,12 +57,6 @@ export function getInteractions() {
  * const timer = resolveConfigValue(config, 'tap', 'timer_single', INTERACTION.TAP.TIMER_SINGLE_DEFAULT);
  */
 export function resolveConfigValue(cardConfig, category, property, constantValue, fallback = constantValue) {
-  // Check cache first
-  const cachedValue = configCache.get(cardConfig, category, property, constantValue);
-  if (cachedValue !== undefined) {
-    return cachedValue;
-  }
-
   // Resolve the value using priority chain
   let resolvedValue;
   
@@ -82,9 +74,6 @@ export function resolveConfigValue(cardConfig, category, property, constantValue
     resolvedValue = fallback;
   }
 
-  // Cache the resolved value
-  configCache.set(cardConfig, category, property, constantValue, resolvedValue);
-  
   return resolvedValue;
 }
 

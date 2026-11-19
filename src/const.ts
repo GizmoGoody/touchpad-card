@@ -624,12 +624,6 @@ export const PERFORMANCE = {
   /** Maximum number of pointer history entries to prevent memory bloat in long sessions */
   MAX_POINTER_HISTORY: 30,
 
-  /** Time-to-live for cached config values in milliseconds to avoid repeated lookups */
-  CONFIG_CACHE_TTL: 10000,
-
-  /** Delay in milliseconds for non-critical initialization (e.g., feedback visualizer) to reduce startup time */
-  LAZY_INIT_DELAY: 100,
-
   // ===== PLANNED OPTIMIZATIONS (Not yet implemented, ordered by priority) =====
 
   // MEDIUM IMPACT - Throttling prevents CPU spikes during interactions
