@@ -14,7 +14,7 @@
 import { LitElement, html, css } from "https://unpkg.com/lit@2.8.0/index.js?module";
 
 const CARD_VERSION = "0.9.0-beta";
-const CARD_TYPE = "touchpad-card";
+const CARD_TYPE = "touchpad-card-legacy";
 
 // #endregion
 
@@ -837,7 +837,7 @@ class TouchpadCard extends LitElement {
    * @static
    */
   static getConfigElement() {
-    return document.createElement('touchpad-card-editor');
+    return document.createElement('touchpad-card-legacy-editor');
   }
   
   /**
@@ -3294,12 +3294,12 @@ class TouchpadCardEditor extends LitElement {
         </div>
         
         ${this._showActionEditor ? html`
-          <interaction-action-editor
+          <touchpad-card-legacy-quick-action-editor
             .hass=${this.hass}
             .config=${this.config}
             .visible=${this._showActionEditor}
             @config-changed=${this._handleActionEditorConfigChange}
-          ></interaction-action-editor>
+          ></touchpad-card-legacy-quick-action-editor>
         ` : ''}
       </div>
     `;
@@ -6979,10 +6979,10 @@ const rafBatcher = new RAFBatcher();
  * A console message including the card type and version is logged to 
  * indicate successful registration.
  */
-if (!customElements.get("touchpad-card")) {
-  customElements.define("touchpad-card", TouchpadCard);
-  customElements.define("touchpad-card-editor", TouchpadCardEditor);
-  customElements.define("interaction-action-editor", InteractionActionEditor);
+if (!customElements.get("touchpad-card-legacy")) {
+  customElements.define("touchpad-card-legacy", TouchpadCard);
+  customElements.define("touchpad-card-legacy-editor", TouchpadCardEditor);
+  customElements.define("touchpad-card-legacy-quick-action-editor", InteractionActionEditor);
   console.info(
     `%c 👆🏼 ${CARD_TYPE.replaceAll("-", " ").replace(/\b\w/g, l => l.toUpperCase())} %c v${CARD_VERSION} `,
     [

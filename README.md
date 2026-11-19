@@ -1,9 +1,9 @@
 
 <p>
-  <a href="https://github.com/GizmoGoody/homeassistant-touchpad-card/releases"><img alt="Version" src="https://img.shields.io/badge/version-0.9.0--beta-orange"></a>
+  <a href="https://github.com/GizmoGoody/touchpad-card/releases"><img alt="Version" src="https://img.shields.io/badge/version-0.9.0--beta-orange"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
   <a href="https://hacs.xyz/"><img alt="HACS" src="https://img.shields.io/badge/HACS-Custom-blue"></a>
-  <!-- <a href="https://github.com/GizmoGoody/touchpad-card/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/GizmoGoody/homeassistant-touchpad-card/total"></a> -->
+  <!-- <a href="https://github.com/GizmoGoody/touchpad-card/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/GizmoGoody/touchpad-card/total"></a> -->
 </p>
 
 <p align="center">
@@ -61,22 +61,25 @@ I'm not a professional developer, but I (re)learned enough JavaScript and AI pro
 ### HACS (Custom Repository)
 
 1. HACS ► ⋮ (menu) ► Custom repositories
-2. Repository: https://github.com/GizmoGoody/homeassistant-touchpad-card
-3. Category: Dashboard
-4. HACS ► Search for "Touchpad Card" and Install
-5. Add the following to your Home Assistant resources at Settings ► Dashboards ► ⋮ (menu) ► Resources ► + Add resource
-```
-URL: /hacsfiles/touchpad-card.js (/hacsfiles is the /www/community/ folder)
-Resource type: JavaScript module
-```
+2. Repository: https://github.com/GizmoGoody/touchpad-card
+3. Type: Dashboard
+4. HACS ► Search for "Touchpad Card" and Download
+5. Reload your browser. HACS adds the dashboard resource for you.
 
 ### Manual Download
-1. Download the `touchpad-card.js` file to your Home Assistant `www` folder (create the folder if it doesn't exist, optionally use a subfolder)
+1. Download `touchpad-card.js` from the latest [release](https://github.com/GizmoGoody/touchpad-card/releases) to your Home Assistant `www` folder (create the folder if it does not exist, optionally use a subfolder)
 2. Add the following to your Home Assistant resources at Settings ► Dashboards ► ⋮ (menu) ► Resources ► + Add resource
 ```
 URL: /local/touchpad-card.js (/local is the /www folder...include subfolder path if used)
 Resource type: JavaScript module
 ```
+
+### Building from source
+```
+npm ci
+npm run build
+```
+The built card is written to `dist/touchpad-card.js`.
 
 ## Configuration
 
