@@ -1,0 +1,19 @@
+name: HACS validation
+
+# HACS validation needs a public repository and a published release with the
+# built file attached, so it runs on demand and after each release.
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: plugin

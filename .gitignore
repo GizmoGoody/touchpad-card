@@ -1,0 +1,12 @@
+# Build output (attached to GitHub releases, not committed)
+dist/
+node_modules/
+
+# Working files kept out of the repository
+*.docx
+*.pdf
+*.xlsx
+*.csv
+*.psd
+TouchpadCard_GestureRequirements_*.md
+images/interactions/
