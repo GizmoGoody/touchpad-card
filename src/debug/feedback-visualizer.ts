@@ -1,5 +1,5 @@
 import { ICON, INTERACTION, TOUCHPAD } from '../const';
-import { ElementCache, rafBatcher } from '../performance';
+import { rafBatcher } from '../performance';
 
 /**
  * FeedbackVisualizer - Visual feedback and debugging display system for TouchpadCard interactions.
@@ -21,7 +21,6 @@ export class FeedbackVisualizer {
   config: any;
   currentFeedback: any;
   element: any;
-  elementCache: any;
   feedbackIcon: any;
 
   /**
@@ -40,22 +39,19 @@ export class FeedbackVisualizer {
     this.feedbackIcon = null;
     this.currentFeedback = null;
     
-    // Initialize element cache for efficient DOM access
-    this.elementCache = new ElementCache(element);
-    
     // Don't initialize feedback icon here - wait until it's needed (lazy initialization)
   }
 
   /**
    * Lazy initialization for feedback icon element to optimize startup performance.
-   * Searches for feedback icon in cached elements and fallback to direct DOM query.
+   * Looks up the feedback icon element in the card the first time it is needed.
    * 
    * @returns {boolean} True if feedback icon was successfully located and initialized
    */
   initializeFeedback() {
     // Only initialize when actually needed and warn if not found
     if (!this.feedbackIcon) {
-      this.feedbackIcon = this.elementCache?.get('#feedback-icon') || this.element?.querySelector('#feedback-icon');
+      this.feedbackIcon = this.element?.querySelector('#feedback-icon');
     }
     return this.feedbackIcon !== null;
   }

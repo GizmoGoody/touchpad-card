@@ -6,7 +6,7 @@ import { DebugLogger } from '../debug/debug-logger';
 import { FeedbackVisualizer } from '../debug/feedback-visualizer';
 import { InteractionRouter } from '../gestures/interaction-router';
 import { PointerHandler } from '../gestures/pointer-handler';
-import { ElementCache, configCache, rafBatcher } from '../performance';
+import { rafBatcher } from '../performance';
 import { getClampedNumber, getInteractions } from '../utils';
 
 /**
@@ -17,7 +17,6 @@ export class TouchpadCard extends LitElement {
   actionExecutor: any;
   config: any;
   debugLogger: any;
-  elementCache: any;
   feedbackVisualizer: any;
   hass: any;
   interactionRouter: any;
@@ -96,10 +95,7 @@ export class TouchpadCard extends LitElement {
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-    
-    // Initialize element cache for performance optimization
-    this.elementCache = new ElementCache(this.renderRoot);
-    
+
     // Initialize critical systems immediately
     this.initializeResizeObserver();
     
@@ -109,12 +105,30 @@ export class TouchpadCard extends LitElement {
     });
 
     // Initialize interaction system immediately for responsiveness
-    // Removed LAZY_INIT_DELAY to ensure interactions work without delay
     rafBatcher.schedule(() => {
       if (!this.pointerHandler) {
         this.initializeInteractionSystem();
       }
     });
+  }
+
+  /**
+   * Skips renders caused by unrelated Home Assistant state changes. Home Assistant sets
+   * a new hass object on every state change in the system, but the card only displays
+   * the overlay text and icon entity states, so a hass-only change renders only when
+   * one of those states changed. Any other property change always renders.
+   *
+   * @param {Map<string, unknown>} changedProperties - Map of changed property names to previous values
+   * @returns {boolean} True when the card should render
+   * @override
+   */
+  shouldUpdate(changedProperties) {
+    if (!changedProperties.has('hass') || changedProperties.size > 1) return true;
+    const oldHass: any = changedProperties.get('hass');
+    if (!oldHass || !this.hass) return true;
+    const overlay = this.config?.touchpad?.overlay;
+    const entities = [overlay?.text?.entity, overlay?.graphics?.icon?.entity];
+    return entities.some(id => id && oldHass.states[id] !== this.hass.states[id]);
   }
 
   /**
@@ -136,12 +150,6 @@ export class TouchpadCard extends LitElement {
     });
     
     if (changedProperties.has('config')) {
-      // Clear config cache when config changes to ensure fresh lookups
-      configCache.clear();
-      
-      // Update element cache when config changes (in case DOM structure changed)
-      this.elementCache?.clear();
-      
       // Only reinitialize interaction system if:
       // 1. It was already initialized (pointerHandler exists)
       // 2. The interaction-related config actually changed
@@ -188,7 +196,16 @@ export class TouchpadCard extends LitElement {
    */
   connectedCallback() {
     super.connectedCallback();
-    
+
+    // On reconnect, restore the resize observer removed in disconnectedCallback and
+    // recalculate styles, since the card may now be in a different view or size.
+    if (this.hasUpdated) {
+      this.initializeResizeObserver();
+      rafBatcher.schedule(() => {
+        this.updateAllDynamicStyles();
+      });
+    }
+
     // If we have config and hass but no interaction system, and the DOM is ready, reinitialize
     // This handles the case where the visual editor disconnected/reconnected us
     if (this.config && this.hass && !this.pointerHandler) {
@@ -218,9 +235,6 @@ export class TouchpadCard extends LitElement {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
     }
-
-    // Clean up config cache periodically (only when components are being destroyed)
-    configCache.cleanup();
   }
 
   // #endregion
@@ -309,10 +323,7 @@ export class TouchpadCard extends LitElement {
         });
       });
 
-      // Use element cache for efficient element access
-      const touchpadContainerElement =
-        this.elementCache?.get('.touchpad-container') ||
-        this.renderRoot.querySelector('.touchpad-container');
+      const touchpadContainerElement = this.renderRoot.querySelector('.touchpad-container');
       if (touchpadContainerElement) {
         this.resizeObserver.observe(touchpadContainerElement);
       }
@@ -339,9 +350,7 @@ export class TouchpadCard extends LitElement {
    * @private
    */
   initializeInteractionSystem() {
-    // Use element cache with fallback selectors for efficient touchpad element access
-    const touchpadElement = this.elementCache?.getWithFallback('.touchpad', '.touchpad-container') ||
-                           this.renderRoot?.querySelector('.touchpad') ||
+    const touchpadElement = this.renderRoot?.querySelector('.touchpad') ||
                            this.renderRoot?.querySelector('.touchpad-container');
     
     if (!touchpadElement) {
@@ -586,12 +595,6 @@ export class TouchpadCard extends LitElement {
       this.feedbackVisualizer = null;
     }
 
-    // Clean up performance optimization systems
-    if (this.elementCache) {
-      this.elementCache.clear();
-      this.elementCache = null;
-    }
-
     // if (this.debugLogger) {
     //   this.debugLogger.log('info', 'Interaction system cleaned up');
     //   this.debugLogger = null;
@@ -753,8 +756,7 @@ export class TouchpadCard extends LitElement {
     // Set default CSS variables first
     this._setTouchpadDefaults();
 
-    // Use element cache for efficient DOM access
-    const touchpadElement = this.elementCache?.get('.touchpad') || this.renderRoot.querySelector('.touchpad');
+    const touchpadElement = this.renderRoot.querySelector('.touchpad');
     if (!touchpadElement) return; // Exit if touchpad element not found
     
     const touchpadRectangle = touchpadElement.getBoundingClientRect();
