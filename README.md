@@ -1,6 +1,6 @@
 
 <p>
-  <a href="https://github.com/GizmoGoody/touchpad-card/releases"><img alt="Version" src="https://img.shields.io/badge/version-0.9.0--beta-orange"></a>
+  <a href="https://github.com/GizmoGoody/touchpad-card/releases"><img alt="Version" src="https://img.shields.io/badge/version-0.10.0--beta.1-orange"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
   <a href="https://hacs.xyz/"><img alt="HACS" src="https://img.shields.io/badge/HACS-Custom-blue"></a>
   <!-- <a href="https://github.com/GizmoGoody/touchpad-card/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/GizmoGoody/touchpad-card/total"></a> -->
