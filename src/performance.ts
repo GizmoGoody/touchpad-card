@@ -30,7 +30,7 @@ export class RAFBatcher {
     
     if (!this.rafId) {
       this.rafId = requestAnimationFrame(() => {
-        const callbacks = Array.from(this.pendingCallbacks);
+        const callbacks: any[] = Array.from(this.pendingCallbacks);
         this.pendingCallbacks.clear();
         this.rafId = null;
         
@@ -65,6 +65,7 @@ export class RAFBatcher {
 export class ElementCache {
   // Instance fields (declared for TypeScript; assigned at runtime)
   cache: any;
+  renderRoot: any;
   weakRefs: any;
 
   constructor(renderRoot) {
@@ -152,6 +153,7 @@ export class ElementCache {
 export class ConfigCache {
   // Instance fields (declared for TypeScript; assigned at runtime)
   cache: any;
+  renderRoot: any;
   timestamps: any;
 
   constructor() {

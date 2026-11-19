@@ -322,7 +322,7 @@ export class DebugLogger {
     return '';
   }
 
-  formatPointerData(pointer, interaction = {}) {
+  formatPointerData(pointer, interaction: any = {}) {
     const rawPointerType = (pointer.type || pointer.pointerType || 'unknown').toString().toLowerCase();
     const pointerEmoji = this.getPointerEmoji(rawPointerType);
     const pointerLabel = this.getPointerLabel(rawPointerType);

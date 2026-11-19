@@ -639,7 +639,7 @@ export class InteractionRouter {
   processMultiTouchMovement(activePointers) {
     if (activePointers.size !== 2) return;
     
-    const pointers = Array.from(activePointers.values());
+    const pointers: any[] = Array.from(activePointers.values());
     const [pointer1, pointer2] = pointers;
     
     // Calculate current distance and center

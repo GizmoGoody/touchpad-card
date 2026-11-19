@@ -878,7 +878,7 @@ export class InteractionActionEditor extends LitElement {
   _isAllEmpty() {
     return !this._domainService.trim() &&
            !this._entity.trim() &&
-           Object.values(this._data).every(data => !data || !data.trim());
+           Object.values(this._data).every((data: any) => !data || !data.trim());
   }
 
   /**

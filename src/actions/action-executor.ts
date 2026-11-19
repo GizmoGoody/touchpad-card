@@ -44,7 +44,7 @@ export class ActionExecutor {
    * @param {Object} [interactionData.position] - Interaction position data
    * @returns {Promise<void>} Promise that resolves when action execution completes
    */
-  async executeAction(interactionType, interactionData = {}) {
+  async executeAction(interactionType, interactionData: any = {}) {
     try {
       const actionConfig = this._getActionConfig(interactionType);
       
@@ -69,7 +69,7 @@ export class ActionExecutor {
    * @param {string} interactionType - Type of interaction (e.g., 'tap', 'circular_clockwise')
    * @param {Object} interactionData - Additional interaction data
    */
-  async executeActionOnly(interactionType, interactionData = {}) {
+  async executeActionOnly(interactionType, interactionData: any = {}) {
     try {
       const actionConfig = this._getActionConfig(interactionType);
       

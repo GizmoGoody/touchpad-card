@@ -138,7 +138,7 @@ export class TouchpadCardEditor extends LitElement {
    * @returns {Array.<Object>} Configuration schema for ha-form component
    * @static
    */
-  static getConfigSchema(config = {}) {
+  static getConfigSchema(config: any = {}) {
     const cacheKey = this._generateCacheKey(config);
 
     if (this._schemaCache.has(cacheKey)) {
@@ -171,7 +171,7 @@ export class TouchpadCardEditor extends LitElement {
    * @static
    * @private
    */
-  static _generateCacheKey(config = {}) {
+  static _generateCacheKey(config: any = {}) {
     const relevantConfig = {
       header: config.header,
       touchpad: {
@@ -260,8 +260,8 @@ export class TouchpadCardEditor extends LitElement {
    * @returns {Object} Standardized field schema object for ha-form
    * @static
    */
-  static createField(name, label, selector, icon, description) {
-    const field = { name, label, selector };
+  static createField(name, label, selector, icon?, description?) {
+    const field: any = { name, label, selector };
     if (icon) field.icon = icon;
     if (description) field.helper = description;
     return field;
@@ -936,7 +936,7 @@ export class TouchpadCardEditor extends LitElement {
       const categoryConfig = config.interactions?.[category];
       if (!categoryConfig) return;
 
-      Object.values(categoryConfig).forEach(actionConfig => {
+      Object.values(categoryConfig).forEach((actionConfig: any) => {
         if (actionConfig && 
             (actionConfig.action === 'perform-action' || actionConfig.action === 'call-service') &&
             !actionConfig.target?.entity_id && 
