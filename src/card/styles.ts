@@ -21,7 +21,7 @@ export const cardStyles = css`
         /* HEADER */
         --touchpad-card-header-background: var(--ha-card-background, rgba(255, 255, 255, 0));
         --touchpad-card-header-color: var(--primary-text-color, rgba(255, 255, 255, 1));
-      
+
         /* TOUCHPAD */
         /* This is the intended fallback chain, but I cannot get --state-icon-color to blend properly with its container while trying to match the appearance of the area card main area */
         /* --touchpad-card-touchpad-color: var(--touchpad-card-config-touchpad-color, var(--state-icon-color, var(--ha-card-background, var(--primary-background-color, #fff)))); */
@@ -30,7 +30,6 @@ export const cardStyles = css`
         --touchpad-card-touchpad-color: var(--touchpad-card-config-touchpad-color, transparent);
         --touchpad-card-touchpad-opacity: var(--touchpad-card-config-touchpad-opacity, 1);
         --touchpad-card-touchpad-margin: var(--touchpad-card-config-touchpad-margin, var(--touchpad-card-default-margin));
-        /* --touchpad-card-touchpad-blend-mode: overlay; */
 
         /* TOUCHPAD BORDER */
         --touchpad-card-touchpad-border-width: var(--touchpad-card-config-touchpad-border-width, var(--touchpad-card-default-border-width));
@@ -171,9 +170,6 @@ export const cardStyles = css`
         opacity: var(--touchpad-card-touchpad-opacity, 1);
         touch-action: none; /* Prevent default touch actions */
         transition: opacity 0.12s ease, transform 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
-
-        /* Not supported on iOS */
-        /* mix-blend-mode: var(--touchpad-card-touchpad-blend-mode, overlay); /* Blend with background */
       }
 
       /* ===== EFFECTS ===== */

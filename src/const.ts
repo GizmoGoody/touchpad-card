@@ -126,7 +126,7 @@ export const ICON = {
   DOUBLE_TAP: 'mdi:gesture-double-tap',
   /** Hold/long press gesture icon */
   HOLD: 'mdi:gesture-tap-hold',
-  
+
   // Linear Direction Interactions
   /** Left swipe gesture icon */
   LINEAR_LEFT: 'mdi:gesture-swipe-left',
@@ -158,18 +158,17 @@ export const ICON = {
   CIRCULAR_DOUBLE_CLOCKWISE: 'mdi:rotate-right-variant',
   /** Double-tap counterclockwise rotation icon */
   CIRCULAR_DOUBLE_COUNTERCLOCKWISE: 'mdi:rotate-left-variant',
-  
+
   // Multi-touch Interactions
   /** Pinch in (zoom out) gesture icon */
   MULTI_PINCH_IN: 'mdi:gesture-pinch',
   /** Pinch out (zoom in) gesture icon */
   MULTI_PINCH_OUT: 'mdi:gesture-spread',
-  
+
   // Tuning Parameter Icons
   /** Distance/threshold measurement icon */
   TAP_DISTANCE: 'mdi:ruler',
   /** Single tap timer icon */
-  TAP_TIMER_SINGLE: 'mdi:timer',
   /** Double tap timer icon */
   TAP_TIMER_DOUBLE: 'mdi:timer-sand-empty',
   /** Hold timer icon */
@@ -211,20 +210,6 @@ export const INTERACTION = {
   TAP: {
 
     // Tuning Constants with dynamic descriptions
-    /** Minimum duration for single tap recognition (milliseconds) */
-    TIMER_SINGLE_MIN: 50,
-    /** Default duration for single tap recognition (milliseconds) */
-    TIMER_SINGLE_DEFAULT: 100,
-    /** Maximum duration for single tap recognition (milliseconds) */
-    TIMER_SINGLE_MAX: 500,
-    /**
-     * Dynamic description for single tap timer
-     * @returns {string} Description with current min/max values
-     */
-    get TIMER_SINGLE_DESCRIPTION() {
-      return `Minimum tap duration (${this.TIMER_SINGLE_MIN}-${this.TIMER_SINGLE_MAX} ms) to trigger as a tap.`;
-    },
-
     /** Minimum time between taps for double tap detection (milliseconds) */
     TIMER_DOUBLE_MIN: 100,
     /** Default time between taps for double tap detection (milliseconds) */
@@ -242,7 +227,7 @@ export const INTERACTION = {
     /** Minimum duration for hold action recognition (milliseconds) */
     TIMER_HOLD_MIN: 500,
     /** Default duration for hold action recognition (milliseconds) */
-    TIMER_HOLD_DEFAULT: 800, 
+    TIMER_HOLD_DEFAULT: 800,
     /** Maximum duration for hold action recognition (milliseconds) */
     TIMER_HOLD_MAX: 2000,
     /**
@@ -255,23 +240,23 @@ export const INTERACTION = {
 
     // Interaction Type Definitions
     /** Single tap interaction metadata */
-    tap: { 
+    tap: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.TAP
     },
     /** Double tap interaction metadata */
-    double_tap: { 
+    double_tap: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.DOUBLE_TAP
     },
     /** Hold/long press interaction metadata */
-    hold: { 
+    hold: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.HOLD
     }
@@ -373,72 +358,72 @@ export const INTERACTION = {
 
     // Linear Interaction Type Definitions
     /** Left swipe interaction metadata */
-    left: { 
+    left: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_LEFT
     },
     /** Right swipe interaction metadata */
-    right: { 
+    right: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_RIGHT
     },
     /** Up swipe interaction metadata */
-    up: { 
+    up: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_UP
     },
     /** Down swipe interaction metadata */
-    down: { 
+    down: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_DOWN
     },
     /** Up-left diagonal swipe interaction metadata */
-    up_left: { 
+    up_left: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_UP_LEFT
     },
     /** Up-right diagonal swipe interaction metadata */
-    up_right: { 
+    up_right: {
       /** Interaction execution mode */
       mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_UP_RIGHT
     },
     /** Down-left diagonal swipe interaction metadata */
-    down_left: { 
+    down_left: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_DOWN_LEFT
     },
     /** Down-right diagonal swipe interaction metadata */
-    down_right: { 
+    down_right: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_DOWN_RIGHT
     },
     /** Two-finger up swipe interaction metadata */
-    up_2: { 
+    up_2: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_UP_2
     },
     /** Two-finger down swipe interaction metadata */
-    down_2: { 
+    down_2: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.LINEAR_DOWN_2
     }
@@ -510,14 +495,14 @@ export const INTERACTION = {
 
     // Circular Interaction Type Definitions
     /** Clockwise rotation interaction metadata */
-    circular_clockwise: { 
+    circular_clockwise: {
       /** Interaction execution mode */
       mode: 'continuous',
       /** Associated icon */
       icon: ICON.CIRCULAR_CLOCKWISE
     },
     /** Counterclockwise rotation interaction metadata */
-    circular_counterclockwise: { 
+    circular_counterclockwise: {
       /** Interaction execution mode */
       mode: 'continuous',
       /** Associated icon */
@@ -592,16 +577,16 @@ export const INTERACTION = {
 
     // Multi-touch Interaction Type Definitions
     /** Pinch in (zoom out) interaction metadata */
-    pinch_in: { 
+    pinch_in: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.MULTI_PINCH_IN
     },
     /** Pinch out (zoom in) interaction metadata */
-    pinch_out: { 
+    pinch_out: {
       /** Interaction execution mode */
-      mode: 'discrete', 
+      mode: 'discrete',
       /** Associated icon */
       icon: ICON.MULTI_PINCH_OUT
     }
@@ -616,27 +601,8 @@ export const INTERACTION = {
  * @namespace
  */
 export const PERFORMANCE = {
-  // ===== IMPLEMENTED OPTIMIZATIONS =====
-
   /** Enable RAF (RequestAnimationFrame) batching for visual updates to consolidate multiple calls */
   RAF_BATCH_ENABLED: true,
-
-  /** Maximum number of pointer history entries to prevent memory bloat in long sessions */
-  MAX_POINTER_HISTORY: 30,
-
-  // ===== PLANNED OPTIMIZATIONS (Not yet implemented, ordered by priority) =====
-
-  // MEDIUM IMPACT - Throttling prevents CPU spikes during interactions
-  // INTERACTION_THROTTLE: 8, // Throttle heavy interaction calculations (e.g., angle/distance) to ~120 FPS for responsiveness without excess CPU
-
-  // MEDIUM IMPACT - Multi-touch throttling reduces CPU usage
-  // MULTI_TOUCH_UPDATE_THROTTLE: 16, // Throttle multi-touch distance calculations (60 FPS)
-
-  // MEDIUM IMPACT - Event debouncing reduces processing overhead
-  // MOVE_EVENT_DEBOUNCE: 16, // ~60 FPS (1000 ms / 60fps = 16.67ms) - balanced for all devices
-
-  // LOW IMPACT - Shorter animations reduce RAF cycles
-  // FEEDBACK_ANIMATION_DURATION: 150, // Shorter animation duration for feedback to reduce RAF cycles
 };
 
 // #endregion

@@ -37,7 +37,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Defines reactive properties for the card editor component.
    * These properties enable data binding and trigger re-renders when values change.
-   * 
+   *
    * @returns {Object.<string, {type: Function, state?: boolean}>} Property definitions with types and state flags
    * @static
    */
@@ -55,7 +55,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Cache for memoized schema generation to improve editor performance.
    * Stores generated form schemas to avoid recalculation on repeated renders.
-   * 
+   *
    * @type {Map<string, Array>}
    * @static
    * @private
@@ -83,7 +83,7 @@ export class TouchpadCardEditor extends LitElement {
 
   /**
    * Sets the editor configuration and initializes internal state.
-   * 
+   *
    * @param {Object} config - Card configuration object to edit
    * @returns {void}
    */
@@ -95,13 +95,13 @@ export class TouchpadCardEditor extends LitElement {
    * Initializes debounced configuration change handler to prevent excessive updates.
    * Creates a debounced function that delays config updates to improve performance
    * when users are actively typing or making rapid changes.
-   * 
+   *
    * @returns {void}
    * @override
    */
   connectedCallback() {
     super.connectedCallback();
-    
+
     // Create debounced version of config change handler
     this._debouncedConfigChange = this._debounce((config) => {
       this.dispatchEvent(
@@ -116,7 +116,7 @@ export class TouchpadCardEditor extends LitElement {
 
   /**
    * Simple debounce utility function to limit function execution frequency.
-   * 
+   *
    * @param {Function} func - Function to debounce
    * @param {number} delay - Delay in milliseconds before execution
    * @returns {Function} Debounced function that delays execution
@@ -133,7 +133,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Returns dynamic configuration schema based on current config state.
    * Uses memoization to cache schemas and improve rendering performance.
-   * 
+   *
    * @param {Object} [config={}] - Current card configuration
    * @returns {Array.<Object>} Configuration schema for ha-form component
    * @static
@@ -165,7 +165,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates a cache key from the configuration object for schema memoization.
    * Only includes properties that affect schema generation to minimize cache misses.
-   * 
+   *
    * @param {Object} [config={}] - Configuration object to generate key from
    * @returns {string} Stable cache key string for schema lookup
    * @static
@@ -191,28 +191,12 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Clears the schema cache to force regeneration on next access.
    * Useful when config structure changes significantly and cached schemas become invalid.
-   * 
+   *
    * @returns {void}
    * @static
    */
   static clearSchemaCache() {
     this._schemaCache.clear();
-  }
-
-  /**
-   * Returns cache statistics for debugging and performance monitoring.
-   * Provides insight into cache usage and effectiveness.
-   * 
-   * @returns {Object} Cache statistics object
-   * @returns {number} returns.size - Current number of cached schemas
-   * @returns {Array.<string>} returns.keys - Array of all cache keys
-   * @static
-   */
-  static getCacheStats() {
-    return {
-      size: this._schemaCache.size,
-      keys: Array.from(this._schemaCache.keys())
-    };
   }
 
   // #endregion
@@ -224,7 +208,7 @@ export class TouchpadCardEditor extends LitElement {
 
   /**
    * Creates a number selector configuration with percentage unit and range constraints.
-   * 
+   *
    * @param {number} min - Minimum allowed value
    * @param {number} max - Maximum allowed value
    * @returns {Object} Home Assistant number selector configuration
@@ -236,7 +220,7 @@ export class TouchpadCardEditor extends LitElement {
 
   /**
    * Creates a standardized expandable section schema object for grouping related fields.
-   * 
+   *
    * @param {string} name - Internal name/key for the expandable section
    * @param {string} title - Display title shown to users
    * @param {string} icon - Material Design icon identifier
@@ -251,7 +235,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Creates a standardized field schema object for ha-form components.
    * Provides consistent structure for form fields with optional icon and description.
-   * 
+   *
    * @param {string} name - Field name/key for configuration storage
    * @param {string} label - User-visible label for the field
    * @param {Object} selector - Home Assistant form selector object (e.g., { number: {...} }, { boolean: {} })
@@ -269,7 +253,7 @@ export class TouchpadCardEditor extends LitElement {
 
   /**
    * Determines whether header configuration fields should be displayed.
-   * 
+   *
    * @param {Object} config - Current card configuration
    * @returns {boolean} True if header is enabled and fields should be shown
    * @static
@@ -280,7 +264,7 @@ export class TouchpadCardEditor extends LitElement {
 
   /**
    * Determines which graphics expandable sections to include based on the selected graphics mode.
-   * 
+   *
    * @param {Object} config - Current card configuration
    * @returns {Array.<Object>} Array of expandable schema objects for graphics configuration
    * @static
@@ -293,7 +277,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Strategy pattern mapping graphics modes to their corresponding expandable sections.
    * Provides a clean way to determine which configuration sections are relevant.
-   * 
+   *
    * @type {Object.<string, Function>}
    * @static
    */
@@ -330,7 +314,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates the appearance configuration schema containing header and touchpad settings.
    * Creates expandable sections for organizing visual appearance options in the configuration UI.
-   * 
+   *
    * @param {Object} config - Current card configuration for conditional field visibility
    * @returns {Array.<Object>} Appearance schema containing header and touchpad expandable sections
    * @static
@@ -345,7 +329,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates header configuration schema with fields that adapt based on card configuration.
    * Controls visibility and icon selection options for the card header area.
-   * 
+   *
    * @param {Object} config - Current card configuration for conditional field visibility
    * @returns {Array.<Object>} Header-specific schema fields including title, icon, and state options
    * @static
@@ -368,7 +352,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates comprehensive touchpad configuration schema including visual styling and interaction areas.
    * Creates configuration fields for masonry layout, colors, opacity, margins, borders, and overlay content.
-   * 
+   *
    * @param {Object} config - Current card configuration for conditional overlay field generation
    * @returns {Array.<Object>} Complete touchpad schema with appearance controls and expandable sections
    * @static
@@ -377,29 +361,6 @@ export class TouchpadCardEditor extends LitElement {
     return [
       this.createField("color", "Color", this.UI_COLOR_SELECTOR),
       this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX)),
-      // this.createField("blend", "Blend Mode", {
-      //   select: {
-      //     options: [
-      //       { value: "normal", label: "Normal (No Blending)" },
-      //       { value: "multiply", label: "Multiply" },
-      //       { value: "screen", label: "Screen" },
-      //       { value: "overlay", label: "Overlay (Default)" },
-      //       { value: "darken", label: "Darken" },
-      //       { value: "lighten", label: "Lighten" },
-      //       { value: "color-dodge", label: "Color Dodge" },
-      //       { value: "color-burn", label: "Color Burn" },
-      //       { value: "hard-light", label: "Hard Light" },
-      //       { value: "soft-light", label: "Soft Light" },
-      //       { value: "difference", label: "Difference" },
-      //       { value: "exclusion", label: "Exclusion" },
-      //       { value: "hue", label: "Hue" },
-      //       { value: "saturation", label: "Saturation" },
-      //       { value: "color", label: "Color" },
-      //       { value: "luminosity", label: "Luminosity" }
-      //     ],
-      //     mode: "dropdown"
-      //   }
-      // }),
       this.createField("margin", `Margin (${TOUCHPAD.MARGIN_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.MARGIN_MIN, TOUCHPAD.MARGIN_MAX)),
       this.createExpandable("border", "Border", ICON.BORDER, this.getBorderSchema()),
       this.createExpandable("overlay", "Overlay", ICON.OVERLAY, this.getOverlaySchema(config))
@@ -409,7 +370,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates border configuration schema with styling options for touchpad boundaries.
    * Provides controls for border width, color, opacity, and style properties.
-   * 
+   *
    * @returns {Array.<Object>} Border schema fields for width, color, opacity, and style configuration
    * @static
    */
@@ -424,7 +385,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates overlay configuration schema with text and graphics content options.
    * Creates expandable sections for organizing text overlays and graphical elements.
-   * 
+   *
    * @param {Object} config - Current card configuration for conditional graphics options
    * @returns {Array.<Object>} Overlay schema with expandable text and graphics sections
    * @static
@@ -439,7 +400,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Creates an expandable text configuration section for overlay text styling.
    * Provides comprehensive text appearance controls including entity binding, colors, and opacity.
-   * 
+   *
    * @returns {Object} Expandable text configuration section with entity, styling, and display options
    * @static
    */
@@ -455,7 +416,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates graphics configuration schema with dynamic mode selection and conditional icon/image options.
    * Creates mode selector and conditionally displays icon or image expandables based on graphics mode.
-   * 
+   *
    * @param {Object} config - Current card configuration to determine which graphics options to show
    * @returns {Array.<Object>} Graphics schema with mode selector and conditional expandable sections
    * @static
@@ -469,7 +430,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Creates a graphics mode selector field for choosing between icon and image display modes.
    * Provides dropdown selection for different graphics rendering options.
-   * 
+   *
    * @returns {Object} Graphics mode selector field configuration with icon/image options
    * @static
    */
@@ -490,7 +451,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Creates an expandable icon configuration section for icon overlay styling.
    * Provides comprehensive icon controls including entity binding, scaling, colors, and opacity.
-   * 
+   *
    * @returns {Object} Expandable icon configuration section with entity, appearance, and scaling options
    * @static
    */
@@ -507,7 +468,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Creates an expandable image configuration section for image overlay styling.
    * Provides comprehensive image controls including file selection, scaling, and opacity.
-   * 
+   *
    * @returns {Object} Expandable image configuration section with file path, scaling, and opacity options
    * @static
    */
@@ -529,7 +490,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates comprehensive interaction configuration schemas for all touch/mouse input types.
    * Creates expandable interaction section containing entity settings and interaction type configurations.
-   * 
+   *
    * @returns {Array.<Object>} Complete interaction schemas with entity selector and interaction sections
    * @static
    */
@@ -549,7 +510,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Generates individual interaction sections for different input types (tap, linear, circular, multi).
    * Creates expandable sections for each interaction category with type-specific configuration options.
-   * 
+   *
    * @returns {Array.<Object>} Interaction section schemas for tap, linear, circular, and multi-touch inputs
    * @static
    */
@@ -565,7 +526,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Creates an interaction configuration section with tuning and action settings.
    * Generates expandable section containing sensitivity tuning and individual action configurations.
-   * 
+   *
    * @param {string} icon - Icon identifier for the section header
    * @param {string} title - Display title for the interaction section
    * @param {Array.<Object>} interactionSettings - Array of interaction setting objects with tuning and actions
@@ -585,7 +546,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Maps interaction section display titles to internal configuration section names.
    * Provides translation between user-friendly titles and configuration object keys.
-   * 
+   *
    * @param {string} title - Human-readable section title (e.g., "Tap Interactions")
    * @returns {string} Internal section name for configuration storage (e.g., "tap")
    * @static
@@ -611,13 +572,6 @@ export class TouchpadCardEditor extends LitElement {
       switch (sectionName) {
         case 'tap':
           return this.createExpandable(tuningSetting.key, tuningSetting.label, tuningSetting.icon, [
-            this.createField(
-              'timer_single',
-              `Single Tap Timer (${INTERACTION.TAP.TIMER_SINGLE_DEFAULT} ms)`,
-              { number: { min: INTERACTION.TAP.TIMER_SINGLE_MIN, max: INTERACTION.TAP.TIMER_SINGLE_MAX, step: 10, unit_of_measurement: 'ms' } },
-              ICON.TAP_TIMER_SINGLE,
-              INTERACTION.TAP.TIMER_SINGLE_DESCRIPTION
-            ),
             this.createField(
               'timer_double',
               `Double Tap Timer (${INTERACTION.TAP.TIMER_DOUBLE_DEFAULT} ms)`,
@@ -814,7 +768,7 @@ export class TouchpadCardEditor extends LitElement {
   // ==========================
   // #region EVENT HANDLERS ===
   // ==========================
-  
+
   /**
    * Computes helper text for form fields
    * @param {Object} schema - Schema field definition
@@ -843,7 +797,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Handles form value changes and dispatches configuration updates with validation and sanitization.
    * Performs automatic cleanup of empty color fields and manages schema cache invalidation.
-   * 
+   *
    * @param {Event} ev - Form value change event from ha-form
    * @param {Object} ev.detail - Event detail containing the updated configuration
    * @param {Object} ev.detail.value - New configuration value
@@ -857,7 +811,8 @@ export class TouchpadCardEditor extends LitElement {
         return;
       }
 
-      const config = ev.detail.value ?? {};
+      // Work on a copy: the form's value can share nested objects with the saved config
+      const config = structuredClone(ev.detail.value ?? {});
 
       if (typeof config !== 'object') {
         console.error('TouchpadCardEditor: Invalid config type received');
@@ -872,39 +827,6 @@ export class TouchpadCardEditor extends LitElement {
       }
 
       this._populateDefaultEntityIntoActions(config);
-
-      // Sanitize color fields: remove keys where color is empty string/null/undefined
-      try {
-        const touchpad = config.touchpad;
-        if (touchpad) {
-          if (touchpad.color === '' || touchpad.color === null) delete touchpad.color;
-          if (touchpad.border) {
-            if (touchpad.border.color === '' || touchpad.border.color === null) delete touchpad.border.color;
-            if (touchpad.border.opacity === '' || touchpad.border.opacity === null) delete touchpad.border.opacity;
-          }
-          const overlay = touchpad.overlay;
-          if (overlay && overlay.graphics) {
-            const graphics = overlay.graphics;
-            if (graphics.icon) {
-              if (graphics.icon.color === '' || graphics.icon.color === null) delete graphics.icon.color;
-              if (graphics.icon.opacity === '' || graphics.icon.opacity === null) delete graphics.icon.opacity;
-            }
-            if (graphics.image) {
-              if (graphics.image.opacity === '' || graphics.image.opacity === null) delete graphics.image.opacity;
-            }
-          }
-          if (overlay && overlay.text) {
-            const text = overlay.text;
-            if (text.color === '' || text.color === null) delete text.color;
-            if (text.opacity === '' || text.opacity === null) delete text.opacity;
-          }
-          if (touchpad.opacity === '' || touchpad.opacity === null) delete touchpad.opacity;
-        }
-
-        // Clean empty strings elsewhere recursively for color-like keys if desired
-      } catch (e) {
-        // Non-fatal: continue with assigning config
-      }
 
       // Deep-prune empty objects/arrays and blank values so only meaningful keys are saved
       const prunedConfig = TouchpadCardEditor._pruneConfig(config) || {};
@@ -921,7 +843,7 @@ export class TouchpadCardEditor extends LitElement {
   /**
    * Automatically populates the default entity into action configurations that lack specific targets.
    * Ensures consistent entity targeting across interactions when a default entity is specified.
-   * 
+   *
    * @param {Object} config - Configuration object to modify in-place
    * @returns {void}
    * @private
@@ -931,17 +853,17 @@ export class TouchpadCardEditor extends LitElement {
     if (!defaultEntity) return;
 
     const interactionCategories = ['tap', 'linear', 'circular', 'multi'];
-    
+
     interactionCategories.forEach(category => {
       const categoryConfig = config.interactions?.[category];
       if (!categoryConfig) return;
 
       Object.values(categoryConfig).forEach((actionConfig: any) => {
-        if (actionConfig && 
+        if (actionConfig &&
             (actionConfig.action === 'perform-action' || actionConfig.action === 'call-service') &&
-            !actionConfig.target?.entity_id && 
+            !actionConfig.target?.entity_id &&
             !actionConfig.entity) {
-          
+
           if (!actionConfig.target) {
             actionConfig.target = {};
           }
@@ -1007,7 +929,7 @@ export class TouchpadCardEditor extends LitElement {
           .computeHelper=${this._computeHelper}
           @value-changed=${this._valueChanged}
         ></ha-form>
-        
+
         <div class="quick-config-section">
           <ha-button
             outlined
@@ -1019,14 +941,14 @@ export class TouchpadCardEditor extends LitElement {
             Quick Action Editor
           </ha-button>
         </div>
-        
+
         ${this._showActionEditor ? html`
-          <interaction-action-editor
+          <touchpad-card-quick-action-editor
             .hass=${this.hass}
             .config=${this.config}
             .visible=${this._showActionEditor}
             @config-changed=${this._handleActionEditorConfigChange}
-          ></interaction-action-editor>
+          ></touchpad-card-quick-action-editor>
         ` : ''}
       </div>
     `;
@@ -1053,10 +975,10 @@ export class TouchpadCardEditor extends LitElement {
   _handleActionEditorConfigChange(event) {
     event.stopPropagation();
     const updatedConfig = event.detail.config;
-    
+
     // Update our config and dispatch the change
     this.config = updatedConfig;
-    
+
     this.dispatchEvent(new CustomEvent('config-changed', {
       detail: { config: updatedConfig },
       bubbles: true,

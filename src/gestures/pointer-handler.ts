@@ -169,10 +169,6 @@ export class PointerHandler {
     };
   }
 
-  getPointerCount() {
-    return this.activePointers.size;
-  }
-
   cleanup() {
     // Remove event listeners when cleaning up
     this.element.removeEventListener('pointerdown', this.boundPointerDown);

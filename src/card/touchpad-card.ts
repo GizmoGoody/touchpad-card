@@ -31,7 +31,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Defines reactive properties for the LitElement component.
    * These properties trigger re-renders when changed and are used for data binding.
-   * 
+   *
    * @returns {Object.<string, {type: Function}>} Property definitions with type constructors
    * @static
    */
@@ -47,18 +47,18 @@ export class TouchpadCard extends LitElement {
   /**
    * Returns the custom card editor element for Home Assistant UI integration.
    * This enables visual configuration of the card in the Home Assistant interface.
-   * 
+   *
    * @returns {HTMLElement} The card editor custom element
    * @static
    */
   static getConfigElement() {
     return document.createElement('touchpad-card-editor');
   }
-  
+
   /**
    * Returns a minimal stub configuration for the card picker preview in Home Assistant.
    * This configuration is used to show a representative preview when selecting the card type.
-   * 
+   *
    * @returns {Object} Basic configuration object for preview rendering
    * @static
    */
@@ -77,7 +77,7 @@ export class TouchpadCard extends LitElement {
   static get styles() {
     return cardStyles;
   }
-  
+
   // #endregion
   // =========================================
 
@@ -89,7 +89,7 @@ export class TouchpadCard extends LitElement {
    * Called after the first render of the component. Sets up observers, initializes styling,
    * and configures the interaction system for touch/mouse input handling.
    * Observers are used to react to layout changes and update styles accordingly.
-   * 
+   *
    * @returns {void}
    * @override
    */
@@ -98,7 +98,7 @@ export class TouchpadCard extends LitElement {
 
     // Initialize critical systems immediately
     this.initializeResizeObserver();
-    
+
     // Batch style updates with RAF immediately (critical for layout)
     rafBatcher.schedule(() => {
       this.updateAllDynamicStyles();
@@ -135,20 +135,20 @@ export class TouchpadCard extends LitElement {
    * Called when component properties are updated. Refreshes styling and reinitializes
    * systems when configuration changes. Ensures the card adapts to configuration updates
    * and layout changes dynamically.
-   * 
+   *
    * @param {Map<string, unknown>} changedProperties - Map of changed property names to previous values
    * @returns {void}
    * @override
    */
   updated(changedProperties) {
     super.updated(changedProperties);
-    
+
     // Always run view detection and style updates on any update
     // This ensures Sections preview recalculates when layout changes
     rafBatcher.schedule(() => {
       this.updateAllDynamicStyles();
     });
-    
+
     if (changedProperties.has('config')) {
       // Only reinitialize interaction system if:
       // 1. It was already initialized (pointerHandler exists)
@@ -168,7 +168,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Compares old and new configuration to determine if interaction-related settings changed.
    * Used to optimize performance by only reinitializing the interaction system when necessary.
-   * 
+   *
    * @param {Map<string, unknown>} changedProperties - Changed properties map from updated()
    * @returns {boolean} True if interaction configuration has changed, false otherwise
    * @private
@@ -176,21 +176,21 @@ export class TouchpadCard extends LitElement {
   hasInteractionConfigChanged(changedProperties) {
     const oldConfig = changedProperties.get('config');
     const newConfig = this.config;
-    
+
     // If no old config, consider it changed
     if (!oldConfig) return true;
-    
+
     // Compare interaction-related parts of config
     const oldInteractions = JSON.stringify(oldConfig?.interactions || {});
     const newInteractions = JSON.stringify(newConfig?.interactions || {});
-    
+
     return oldInteractions !== newInteractions;
   }
 
   /**
    * Called when the element is connected (or reconnected) to the DOM.
    * Handles reinitialization after visual editor disconnects/reconnects the component.
-   * 
+   *
    * @returns {void}
    * @override
    */
@@ -220,16 +220,16 @@ export class TouchpadCard extends LitElement {
   /**
    * Called when the element is removed from the DOM. Performs cleanup to prevent
    * memory leaks and stops ongoing processes like observers and interaction handlers.
-   * 
+   *
    * @returns {void}
    * @override
    */
   disconnectedCallback() {
     super.disconnectedCallback();
-    
+
     // Clean up interaction system
     this.cleanupInteractionSystem();
-    
+
     // Clean up resize observer
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
@@ -247,7 +247,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Returns the estimated card size for masonry layout calculations.
    * The size is based on the configured number of masonry rows, clamped to valid bounds.
-   * 
+   *
    * @returns {number} Number of masonry row units this card should occupy
    */
   getCardSize() {
@@ -264,11 +264,11 @@ export class TouchpadCard extends LitElement {
   /**
    * Returns grid layout configuration options for sections view layout.
    * Defines the available grid size constraints and defaults for the card.
-   * 
+   *
    * @returns {Object} Grid layout options with row/column constraints
    * @returns {number} returns.rows - Default number of rows
    * @returns {number} returns.min_rows - Minimum allowed rows
-   * @returns {number} returns.max_rows - Maximum allowed rows  
+   * @returns {number} returns.max_rows - Maximum allowed rows
    * @returns {number} returns.columns - Default number of columns
    * @returns {number} returns.min_columns - Minimum allowed columns
    * @returns {number} returns.max_columns - Maximum allowed columns
@@ -287,16 +287,12 @@ export class TouchpadCard extends LitElement {
   /**
    * Sets and validates the card configuration. This is the primary method for
    * updating the card's configuration and is called by Home Assistant during setup.
-   * 
+   *
    * @param {Object} config - The card configuration object from Home Assistant
    * @returns {void}
    * @throws {Error} When configuration validation fails (future enhancement)
    */
   setConfig(config) {
-    // Future: Add validation here if needed
-    // if (!config.interactions.entity) {
-    //   throw new Error("You need to define an entity");
-    // }
     this.config = config;
   }
 
@@ -311,7 +307,7 @@ export class TouchpadCard extends LitElement {
    * Sets up ResizeObserver to monitor layout changes and trigger style updates.
    * The observer watches the touchpad container for size changes and schedules
    * style recalculations to maintain proper appearance across different layouts.
-   * 
+   *
    * @returns {void}
    * @private
    */
@@ -333,7 +329,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Updates all dynamic CSS styles that depend on element dimensions or layout context.
    * This includes responsive sizing, view-specific adjustments, and configuration-driven styling.
-   * 
+   *
    * @returns {void}
    * @private
    */
@@ -345,14 +341,14 @@ export class TouchpadCard extends LitElement {
    * Initializes the comprehensive interaction system including pointer handling,
    * gesture recognition, action execution, and visual feedback. This is the core
    * system that enables all touch/mouse interactions on the touchpad.
-   * 
+   *
    * @returns {void}
    * @private
    */
   initializeInteractionSystem() {
     const touchpadElement = this.renderRoot?.querySelector('.touchpad') ||
                            this.renderRoot?.querySelector('.touchpad-container');
-    
+
     if (!touchpadElement) {
       console.warn('[TouchpadCard] Touchpad element not found for interaction initialization');
       return;
@@ -385,7 +381,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Handles recognized interactions by providing visual feedback and preparing interaction data for logging.
    * Called by the InteractionRouter when gestures are successfully detected and classified.
-   * 
+   *
    * @param {string} interactionType - The type of interaction recognized (e.g., 'tap', 'circular_clockwise')
    * @param {Object} interactionData - Additional data about the interaction (duration, distance, angle, etc.)
    * @returns {void}
@@ -394,7 +390,7 @@ export class TouchpadCard extends LitElement {
   handleInteractionRecognized(interactionType, interactionData) {
     // Always show visual feedback for all interactions
     this.feedbackVisualizer.showInteractionFeedback(interactionType, interactionData);
-    
+
   // For continuous interactions, only log when completed
   const isLinearContinuous = Object.keys(INTERACTION.LINEAR).includes(interactionType) && interactionData?.incrementCount > 0;
   const isCircularContinuous = Object.keys(INTERACTION.CIRCULAR).includes(interactionType) && interactionData?.incrementCount > 0;
@@ -571,10 +567,6 @@ export class TouchpadCard extends LitElement {
    * @returns {void}
    */
   cleanupInteractionSystem() {
-    // if (this.debugLogger) {
-    //   this.debugLogger.log('info', 'Cleaning up interaction system');
-    // }
-
     if (this.pointerHandler) {
       this.pointerHandler.cleanup();
       this.pointerHandler = null;
@@ -594,11 +586,6 @@ export class TouchpadCard extends LitElement {
       this.feedbackVisualizer.cleanup();
       this.feedbackVisualizer = null;
     }
-
-    // if (this.debugLogger) {
-    //   this.debugLogger.log('info', 'Interaction system cleaned up');
-    //   this.debugLogger = null;
-    // }
   }
 
   // #endregion
@@ -628,10 +615,6 @@ export class TouchpadCard extends LitElement {
       this.style.removeProperty('--touchpad-card-config-touchpad-color');
       this.style.setProperty('--touchpad-card-config-touchpad-opacity', this._getOpacity(touchpad.opacity));
     }
-
-    // touchpad.blend: Use config value or auto-set based on the configuration of a custom touchpad color
-    // const blendMode = touchpad.blend || (touchpad.color ? 'normal' : 'overlay');
-    // this.style.setProperty('--touchpad-card-touchpad-blend-mode', blendMode);
 
     // touchpad.margin
     const touchpadMargin = getClampedNumber(touchpad.margin, TOUCHPAD.MARGIN_MIN, TOUCHPAD.MARGIN_MAX);
@@ -758,7 +741,7 @@ export class TouchpadCard extends LitElement {
 
     const touchpadElement = this.renderRoot.querySelector('.touchpad');
     if (!touchpadElement) return; // Exit if touchpad element not found
-    
+
     const touchpadRectangle = touchpadElement.getBoundingClientRect();
 
     // JavaScript config object branches
@@ -849,7 +832,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Retrieves the opacity value as a decimal string for CSS usage.
    * Handles null/undefined values by returning the default opacity.
-   * 
+   *
    * @param {number|null|undefined} value - Opacity percentage value from configuration (0-100)
    * @returns {string} Opacity as decimal string (0-1 range) for CSS
    * @private
@@ -865,7 +848,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Combines a color string with an opacity value to create an RGBA color string.
    * Supports RGB, RGBA, HEX, and named colors, converting all to RGBA format.
-   * 
+   *
    * @param {string} colorString - CSS color value (rgb, rgba, hex, or named color)
    * @param {string} opacityString - Opacity as decimal string (0-1 range)
    * @returns {string} RGBA color string, or empty string if parsing fails
@@ -901,11 +884,11 @@ export class TouchpadCard extends LitElement {
   /**
    * Parses any CSS color string to RGB values using browser's color parsing.
    * Creates a temporary DOM element to leverage the browser's native color parsing capabilities.
-   * 
+   *
    * @param {string} colorString - Any valid CSS color string
    * @returns {Object|null} RGB object with r, g, b properties, or null if parsing fails
    * @returns {number} returns.r - Red component (0-255)
-   * @returns {number} returns.g - Green component (0-255) 
+   * @returns {number} returns.g - Green component (0-255)
    * @returns {number} returns.b - Blue component (0-255)
    * @private
    */
@@ -931,7 +914,7 @@ export class TouchpadCard extends LitElement {
    * Retrieves display text for the touchpad overlay from input_text entity or configuration default.
    * Prioritizes the dynamic entity state over the configured default text.
    * Automatically converts \n escape sequences to actual line breaks for multiline display.
-   * 
+   *
    * @returns {string} Text to display on the touchpad overlay with processed line breaks
    */
   getDisplayText() {
@@ -961,7 +944,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Retrieves graphics icon for the touchpad overlay from input_text entity or configuration default.
    * Prioritizes the dynamic entity state over the configured default icon.
-   * 
+   *
    * @returns {string|null} Icon identifier string, or null if no icon is configured
    */
   getGraphicIcon() {
@@ -980,38 +963,6 @@ export class TouchpadCard extends LitElement {
     return configIcon;
   }
 
-  /**
-   * Cleans interaction data for logging by removing coordinates and timestamps
-   * @param {Object} interactionData - Raw interaction data
-   * @returns {Object} Cleaned interaction data safe for logging
-   */
-  cleanInteractionDataForLogging(interactionData) {
-    if (!interactionData || typeof interactionData !== 'object') return interactionData;
-    
-    const cleaned = { ...interactionData };
-    
-    // Remove position-related objects that contain coordinates/timestamps
-    delete cleaned.position;
-    delete cleaned.endPosition;
-    delete cleaned.center;
-    
-    // Remove timing data that's only needed for visual feedback, not logging
-    delete cleaned.timeSinceLastAction;
-    delete cleaned.minInterval;
-    
-    // For objects that might contain nested position data, clean those too
-    Object.keys(cleaned).forEach(key => {
-      if (cleaned[key] && typeof cleaned[key] === 'object') {
-        // Remove x, y, timestamp from any nested objects
-        if (cleaned[key].x !== undefined) delete cleaned[key].x;
-        if (cleaned[key].y !== undefined) delete cleaned[key].y;
-        if (cleaned[key].timestamp !== undefined) delete cleaned[key].timestamp;
-      }
-    });
-    
-    return cleaned;
-  }
-
   // #endregion
   // ===========================
 
@@ -1022,7 +973,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Renders the complete card interface including optional header and main touchpad area.
    * Uses Lit-html templating to create reactive DOM structure that updates based on configuration changes.
-   * 
+   *
    * @returns {import('lit').TemplateResult} Complete card template with header, touchpad, feedback, and text overlay
    * @override
    */
@@ -1074,7 +1025,7 @@ export class TouchpadCard extends LitElement {
               </div>
             </div>
           ` : ''}
-          
+
           <div class="touchpad-text" aria-label="Touchpad text">
             ${touchpadText}
           </div>
@@ -1086,7 +1037,7 @@ export class TouchpadCard extends LitElement {
   /**
    * Renders graphics content (icons and/or images) for the touchpad overlay based on configuration.
    * Supports multiple graphics modes: none, icon only, image only, or both icon and image.
-   * 
+   *
    * @returns {import('lit').TemplateResult} Graphics overlay template or empty template if no graphics
    * @private
    */

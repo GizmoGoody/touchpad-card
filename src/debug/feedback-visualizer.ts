@@ -166,20 +166,6 @@ export class FeedbackVisualizer {
     return isRateLimited ? 'continuous-rate-limited' : 'continuous-no-limit';
   }
 
-  hideAllFeedbackElements(feedbackContainer) {
-    const elements = [
-      '.continuous-row', '.action-counter', 
-      '.rate-limit-bar', '.rate-limit-bar-fill', '.increment-counter', '.angle-text'
-    ];
-    
-    elements.forEach(selector => {
-      const element = feedbackContainer.querySelector(selector);
-      if (element) {
-        element.style.opacity = '0';
-      }
-    });
-  }
-
   showContinuousRateLimited(data, elements) {
     const { continuousRow, actionCounter, incrementCounter, rateLimitBar, rateLimitBarFill, angleText } = elements;
     
