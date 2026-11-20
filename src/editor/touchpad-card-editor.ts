@@ -153,7 +153,8 @@ export class TouchpadCardEditor extends LitElement {
         `Masonry Rows (${TOUCHPAD.ROWS_DEFAULT})`,
         { number: { min: TOUCHPAD.ROWS_MIN, max: TOUCHPAD.ROWS_MAX, step: 1 } },
         ICON.TOUCHPAD,
-        `Masonry view rows (${TOUCHPAD.ROWS_MIN}-${TOUCHPAD.ROWS_MAX}).`
+        `Masonry view rows (${TOUCHPAD.ROWS_MIN}-${TOUCHPAD.ROWS_MAX}).`,
+        TOUCHPAD.ROWS_DEFAULT
       ),
       ...this.getAppearanceSchema(config),
       ...this.getInteractionSchemas()
@@ -242,13 +243,16 @@ export class TouchpadCardEditor extends LitElement {
    * @param {Object} selector - Home Assistant form selector object (e.g., { number: {...} }, { boolean: {} })
    * @param {string} [icon] - Optional Material Design icon name
    * @param {string} [description] - Optional helper text/description shown under the field
+   * @param {number} [defaultValue] - Optional default shown by the form when the value is not set
    * @returns {Object} Standardized field schema object for ha-form
    * @static
    */
-  static createField(name, label, selector, icon?, description?) {
+  static createField(name, label, selector, icon?, description?, defaultValue?) {
     const field: any = { name, label, selector };
     if (icon) field.icon = icon;
     if (description) field.helper = description;
+    // Home Assistant shows the default as the slider position and placeholder without saving it
+    if (defaultValue !== undefined) field.default = defaultValue;
     return field;
   }
 
@@ -361,8 +365,8 @@ export class TouchpadCardEditor extends LitElement {
   static getTouchpadSchema(config) {
     return [
       this.createField("color", "Color", this.UI_COLOR_SELECTOR),
-      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX)),
-      this.createField("margin", `Margin (${TOUCHPAD.MARGIN_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.MARGIN_MIN, TOUCHPAD.MARGIN_MAX)),
+      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX), undefined, undefined, TOUCHPAD.OPACITY_DEFAULT),
+      this.createField("margin", `Margin (${TOUCHPAD.MARGIN_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.MARGIN_MIN, TOUCHPAD.MARGIN_MAX), undefined, undefined, TOUCHPAD.MARGIN_DEFAULT),
       this.createExpandable("border", "Border", ICON.BORDER, this.getBorderSchema()),
       this.createExpandable("overlay", "Overlay", ICON.OVERLAY, this.getOverlaySchema(config))
     ];
@@ -377,9 +381,9 @@ export class TouchpadCardEditor extends LitElement {
    */
   static getBorderSchema() {
     return [
-      this.createField("width", `Width (${TOUCHPAD.BORDER_WIDTH_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.BORDER_WIDTH_MIN, TOUCHPAD.BORDER_WIDTH_MAX)),
+      this.createField("width", `Width (${TOUCHPAD.BORDER_WIDTH_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.BORDER_WIDTH_MIN, TOUCHPAD.BORDER_WIDTH_MAX), undefined, undefined, TOUCHPAD.BORDER_WIDTH_DEFAULT),
       this.createField("color", "Color", this.UI_COLOR_SELECTOR),
-      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX))
+      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX), undefined, undefined, TOUCHPAD.OPACITY_DEFAULT)
     ];
   }
 
@@ -410,7 +414,7 @@ export class TouchpadCardEditor extends LitElement {
       this.createField("entity", "Entity", this.INPUT_TEXT_ENTITY_SELECTOR),
       this.createField("default", "Default", this.TEXT_MULTILINE_SELECTOR),
       this.createField("color", "Color", this.UI_COLOR_SELECTOR),
-      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX))
+      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX), undefined, undefined, TOUCHPAD.OPACITY_DEFAULT)
     ]);
   }
 
@@ -460,9 +464,9 @@ export class TouchpadCardEditor extends LitElement {
     return this.createExpandable("icon", "Icon", ICON.ICON, [
       this.createField("entity", "Entity", this.INPUT_TEXT_ENTITY_SELECTOR),
       this.createField("default", "Default", this.ICON_SELECTOR),
-      this.createField("scale", `Scale (${TOUCHPAD.ICON_SCALE_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.ICON_SCALE_MIN, TOUCHPAD.ICON_SCALE_MAX)),
+      this.createField("scale", `Scale (${TOUCHPAD.ICON_SCALE_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.ICON_SCALE_MIN, TOUCHPAD.ICON_SCALE_MAX), undefined, undefined, TOUCHPAD.ICON_SCALE_DEFAULT),
       this.createField("color", "Color", this.UI_COLOR_SELECTOR),
-      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX))
+      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX), undefined, undefined, TOUCHPAD.OPACITY_DEFAULT)
     ]);
   }
 
@@ -476,8 +480,8 @@ export class TouchpadCardEditor extends LitElement {
   static getImageExpandable() {
     return this.createExpandable("image", "Image", ICON.IMAGE, [
       this.createField("image", "Path or File", this.IMAGE_SELECTOR),
-      this.createField("scale", `Scale (${TOUCHPAD.IMAGE_SCALE_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.IMAGE_SCALE_MIN, TOUCHPAD.IMAGE_SCALE_MAX)),
-      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX))
+      this.createField("scale", `Scale (${TOUCHPAD.IMAGE_SCALE_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.IMAGE_SCALE_MIN, TOUCHPAD.IMAGE_SCALE_MAX), undefined, undefined, TOUCHPAD.IMAGE_SCALE_DEFAULT),
+      this.createField("opacity", `Opacity (${TOUCHPAD.OPACITY_DEFAULT}%)`, this.createPercentSelector(TOUCHPAD.OPACITY_MIN, TOUCHPAD.OPACITY_MAX), undefined, undefined, TOUCHPAD.OPACITY_DEFAULT)
     ]);
   }
 
@@ -578,14 +582,16 @@ export class TouchpadCardEditor extends LitElement {
               `Double Tap Timer (${INTERACTION.TAP.TIMER_DOUBLE_DEFAULT} ms)`,
               { number: { min: INTERACTION.TAP.TIMER_DOUBLE_MIN, max: INTERACTION.TAP.TIMER_DOUBLE_MAX, step: 10, unit_of_measurement: 'ms' } },
               ICON.TAP_TIMER_DOUBLE,
-              INTERACTION.TAP.TIMER_DOUBLE_DESCRIPTION
+              INTERACTION.TAP.TIMER_DOUBLE_DESCRIPTION,
+              INTERACTION.TAP.TIMER_DOUBLE_DEFAULT
             ),
             this.createField(
               'timer_hold',
               `Hold Tap Timer (${INTERACTION.TAP.TIMER_HOLD_DEFAULT} ms)`,
               { number: { min: INTERACTION.TAP.TIMER_HOLD_MIN, max: INTERACTION.TAP.TIMER_HOLD_MAX, step: 10, unit_of_measurement: 'ms' } },
               ICON.TAP_TIMER_HOLD,
-              INTERACTION.TAP.TIMER_HOLD_DESCRIPTION
+              INTERACTION.TAP.TIMER_HOLD_DESCRIPTION,
+              INTERACTION.TAP.TIMER_HOLD_DEFAULT
             ),
           ]);
         case 'linear':
@@ -595,42 +601,48 @@ export class TouchpadCardEditor extends LitElement {
               `Threshold (${INTERACTION.LINEAR.THRESHOLD_DEFAULT} px)`,
               { number: { min: INTERACTION.LINEAR.THRESHOLD_MIN, max: INTERACTION.LINEAR.THRESHOLD_MAX, step: 1, unit_of_measurement: 'px' } },
               ICON.LINEAR_DISTANCE,
-              INTERACTION.LINEAR.THRESHOLD_DESCRIPTION
+              INTERACTION.LINEAR.THRESHOLD_DESCRIPTION,
+              INTERACTION.LINEAR.THRESHOLD_DEFAULT
             ),
             this.createField(
               'timer',
               `Timer (${INTERACTION.LINEAR.TIMER_DEFAULT} ms)`,
               { number: { min: INTERACTION.LINEAR.TIMER_MIN, max: INTERACTION.LINEAR.TIMER_MAX, step: 10, unit_of_measurement: 'ms' } },
               ICON.LINEAR_TIME,
-              INTERACTION.LINEAR.TIMER_DESCRIPTION
+              INTERACTION.LINEAR.TIMER_DESCRIPTION,
+              INTERACTION.LINEAR.TIMER_DEFAULT
             ),
             this.createField(
               'tolerance',
               `Tolerance (${INTERACTION.LINEAR.TOLERANCE_DEFAULT} °)`,
               { number: { min: INTERACTION.LINEAR.TOLERANCE_MIN, max: INTERACTION.LINEAR.TOLERANCE_MAX, step: 0.5, unit_of_measurement: '°' } },
               ICON.LINEAR_DIRECTION,
-              INTERACTION.LINEAR.TOLERANCE_DESCRIPTION
+              INTERACTION.LINEAR.TOLERANCE_DESCRIPTION,
+              INTERACTION.LINEAR.TOLERANCE_DEFAULT
             ),
             this.createField(
               'increment',
               `Increment (${INTERACTION.LINEAR.INCREMENT_DEFAULT} ms)`,
               { number: { min: INTERACTION.LINEAR.INCREMENT_MIN, max: INTERACTION.LINEAR.INCREMENT_MAX, step: 10, unit_of_measurement: 'ms' } },
               ICON.LINEAR_TIME,
-              INTERACTION.LINEAR.INCREMENT_DESCRIPTION
+              INTERACTION.LINEAR.INCREMENT_DESCRIPTION,
+              INTERACTION.LINEAR.INCREMENT_DEFAULT
             ),
             this.createField(
               'settled_timer',
               `Settled Timer (${INTERACTION.LINEAR.SETTLED_TIMER_DEFAULT} ms)`,
               { number: { min: INTERACTION.LINEAR.SETTLED_TIMER_MIN, max: INTERACTION.LINEAR.SETTLED_TIMER_MAX, step: 10, unit_of_measurement: 'ms' } },
               ICON.LINEAR_TIME,
-              INTERACTION.LINEAR.SETTLED_TIMER_DESCRIPTION
+              INTERACTION.LINEAR.SETTLED_TIMER_DESCRIPTION,
+              INTERACTION.LINEAR.SETTLED_TIMER_DEFAULT
             ),
             this.createField(
               'settled_radius',
               `Settled Zone Radius (${INTERACTION.LINEAR.SETTLED_RADIUS_DEFAULT} px)`,
               { number: { min: INTERACTION.LINEAR.SETTLED_RADIUS_MIN, max: INTERACTION.LINEAR.SETTLED_RADIUS_MAX, step: 1, unit_of_measurement: 'px' } },
               ICON.LINEAR_DISTANCE,
-              INTERACTION.LINEAR.SETTLED_RADIUS_DESCRIPTION
+              INTERACTION.LINEAR.SETTLED_RADIUS_DESCRIPTION,
+              INTERACTION.LINEAR.SETTLED_RADIUS_DEFAULT
             ),
           ]);
         case 'circular':
@@ -640,28 +652,32 @@ export class TouchpadCardEditor extends LitElement {
               `Detection Threshold (${INTERACTION.CIRCULAR.THRESHOLD_DETECTION_DEFAULT}°)`,
               { number: { min: INTERACTION.CIRCULAR.THRESHOLD_DETECTION_MIN, max: INTERACTION.CIRCULAR.THRESHOLD_DETECTION_MAX, step: 1, unit_of_measurement: '°' } },
               ICON.CIRCULAR_DETECTION,
-              INTERACTION.CIRCULAR.THRESHOLD_DETECTION_DESCRIPTION
+              INTERACTION.CIRCULAR.THRESHOLD_DETECTION_DESCRIPTION,
+              INTERACTION.CIRCULAR.THRESHOLD_DETECTION_DEFAULT
             ),
             this.createField(
               'threshold_initial',
               `Initial Threshold (${INTERACTION.CIRCULAR.THRESHOLD_INITIAL_DEFAULT}°)`,
               { number: { min: INTERACTION.CIRCULAR.THRESHOLD_INITIAL_MIN, max: INTERACTION.CIRCULAR.THRESHOLD_INITIAL_MAX, step: 5, unit_of_measurement: '°' } },
               ICON.CIRCULAR_INITIAL,
-              INTERACTION.CIRCULAR.THRESHOLD_INITIAL_DESCRIPTION
+              INTERACTION.CIRCULAR.THRESHOLD_INITIAL_DESCRIPTION,
+              INTERACTION.CIRCULAR.THRESHOLD_INITIAL_DEFAULT
             ),
             this.createField(
               'threshold_increment',
               `Increment Threshold (${INTERACTION.CIRCULAR.THRESHOLD_INCREMENT_DEFAULT}°)`,
               { number: { min: INTERACTION.CIRCULAR.THRESHOLD_INCREMENT_MIN, max: INTERACTION.CIRCULAR.THRESHOLD_INCREMENT_MAX, step: 5, unit_of_measurement: '°' } },
               ICON.CIRCULAR_INCREMENT,
-              INTERACTION.CIRCULAR.THRESHOLD_INCREMENT_DESCRIPTION
+              INTERACTION.CIRCULAR.THRESHOLD_INCREMENT_DESCRIPTION,
+              INTERACTION.CIRCULAR.THRESHOLD_INCREMENT_DEFAULT
             ),
             this.createField(
               'rate_action_max',
               `Max Action Rate (${INTERACTION.CIRCULAR.RATE_ACTION_MAX_DEFAULT} actions/sec)`,
               { number: { min: INTERACTION.CIRCULAR.RATE_ACTION_MAX_MIN, max: INTERACTION.CIRCULAR.RATE_ACTION_MAX_MAX, step: 1, unit_of_measurement: '/sec' } },
               ICON.CIRCULAR_INCREMENT,
-              INTERACTION.CIRCULAR.RATE_ACTION_MAX_DESCRIPTION
+              INTERACTION.CIRCULAR.RATE_ACTION_MAX_DESCRIPTION,
+              INTERACTION.CIRCULAR.RATE_ACTION_MAX_DEFAULT
             ),
           ]);
         case 'multi':
@@ -671,21 +687,24 @@ export class TouchpadCardEditor extends LitElement {
               `Timer (${INTERACTION.MULTI.TIMER_DEFAULT} ms)`,
               { number: { min: INTERACTION.MULTI.TIMER_MIN, max: INTERACTION.MULTI.TIMER_MAX, step: 10, unit_of_measurement: 'ms' } },
               ICON.MULTI_DISTANCE,
-              INTERACTION.MULTI.TIMER_DESCRIPTION
+              INTERACTION.MULTI.TIMER_DESCRIPTION,
+              INTERACTION.MULTI.TIMER_DEFAULT
             ),
             this.createField(
               'threshold',
               `Threshold (${INTERACTION.MULTI.THRESHOLD_DEFAULT} px)`,
               { number: { min: INTERACTION.MULTI.THRESHOLD_MIN, max: INTERACTION.MULTI.THRESHOLD_MAX, step: 5, unit_of_measurement: 'px' } },
               ICON.MULTI_DISTANCE,
-              INTERACTION.MULTI.THRESHOLD_DESCRIPTION
+              INTERACTION.MULTI.THRESHOLD_DESCRIPTION,
+              INTERACTION.MULTI.THRESHOLD_DEFAULT
             ),
             this.createField(
               'ratio',
               `Ratio (${INTERACTION.MULTI.RATIO_DEFAULT})`,
               { number: { min: INTERACTION.MULTI.RATIO_MIN, max: INTERACTION.MULTI.RATIO_MAX, step: 0.1, unit_of_measurement: '' } },
               ICON.MULTI_PRIORITY,
-              INTERACTION.MULTI.RATIO_DESCRIPTION
+              INTERACTION.MULTI.RATIO_DESCRIPTION,
+              INTERACTION.MULTI.RATIO_DEFAULT
             ),
           ]);
         default:
