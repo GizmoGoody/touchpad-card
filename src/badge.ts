@@ -20,8 +20,8 @@ export function printBadge(info: BadgeInfo): void {
   const url = `https://github.com/GizmoGoody/${info.repo}`;
   console.groupCollapsed(
     `%c${info.icon} ${info.name}%cv${info.version}%c by GizmoGoody`,
-    `${BASE} background-color: ${NAVY}; color: ${SILVER}; border-radius: 5px 0 0 5px;`,
-    `${BASE} background-color: ${SILVER}; color: ${NAVY}; border-radius: 0 5px 5px 0; font-weight: bold;`,
+    `${BASE} background-color: ${NAVY}; color: ${SILVER}; border-radius: 999px 0 0 999px; padding-left: 10px;`,
+    `${BASE} background-color: ${SILVER}; color: ${NAVY}; border-radius: 0 999px 999px 0; padding-right: 10px; font-weight: bold;`,
     "font-style: italic; color: inherit;"
   );
   console.log(`%cDescription:%c ${info.description}`, "font-weight: bold;", "font-weight: normal;");
