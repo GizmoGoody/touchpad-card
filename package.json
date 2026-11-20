@@ -15,6 +15,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@gizmogoody/card-badge": "github:GizmoGoody/card-badge#v1.0.0",
     "lit": "^3.3.1"
   },
   "devDependencies": {

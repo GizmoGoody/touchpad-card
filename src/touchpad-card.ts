@@ -1,4 +1,4 @@
-import { printBadge } from './badge';
+import { printBadge } from '@gizmogoody/card-badge';
 import { TouchpadCard } from './card/touchpad-card';
 import { CARD_TYPE, CARD_VERSION } from './const';
 import { InteractionActionEditor } from './editor/quick-action-editor';
