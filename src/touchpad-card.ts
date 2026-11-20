@@ -1,3 +1,4 @@
+import { printBadge } from './badge';
 import { TouchpadCard } from './card/touchpad-card';
 import { CARD_TYPE, CARD_VERSION } from './const';
 import { InteractionActionEditor } from './editor/quick-action-editor';
@@ -23,25 +24,13 @@ if (!customElements.get("touchpad-card")) {
   defineElement("touchpad-card", TouchpadCard);
   defineElement("touchpad-card-editor", TouchpadCardEditor);
   defineElement("touchpad-card-quick-action-editor", InteractionActionEditor);
-  console.info(
-    `%c 👆🏼 ${CARD_TYPE.replaceAll("-", " ").replace(/\b\w/g, l => l.toUpperCase())} %c v${CARD_VERSION} `,
-    [
-      "background-color: #001689ff;",
-      "color: #9ea1a2ff;",
-      "padding: 2px 1px 2px 2px;",
-      "border-radius: 5px 0 0 5px;",
-      "font-family: DejaVu Sans,Verdana,Geneva,sans-serif;",
-      "text-shadow: 0 1px 0 rgba(1, 1, 1, 0.3);"
-    ].join("\n"),
-    [
-      "background-color: #9ea1a2ff;",
-      "color: #001689ff;",
-      "padding: 2px 2px 2px 1px;",
-      "border-radius: 0 5px 5px 0;",
-      "font-family: DejaVu Sans,Verdana,Geneva,sans-serif;",
-      "text-shadow: 0 1px 0 rgba(1, 1, 1, 0.3);"
-    ].join("\n")
-  );
+  printBadge({
+    icon: "👆🏼",
+    name: "Touchpad Card",
+    version: CARD_VERSION,
+    description: "A tunable touchpad with 19 tap, linear, circular, and multi-touch interactions.",
+    repo: CARD_TYPE,
+  });
 
   // Registers the card with Home Assistant's customCards array so it appears in the card picker.
   window.customCards = window.customCards || [];
