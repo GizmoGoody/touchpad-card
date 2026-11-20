@@ -1,6 +1,6 @@
 {
   "name": "touchpad-card",
-  "version": "0.10.0-beta.1",
+  "version": "0.10.0-beta.2",
   "description": "A customizable and tunable touchpad card for Home Assistant dashboards.",
   "private": true,
   "type": "module",
