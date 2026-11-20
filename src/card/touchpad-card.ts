@@ -19,6 +19,8 @@ export class TouchpadCard extends LitElement {
   debugLogger: any;
   feedbackVisualizer: any;
   hass: any;
+  _resolvedImage: string | undefined;
+  _resolvingImage: string | undefined;
   interactionRouter: any;
   pointerHandler: any;
   resizeObserver: any;
@@ -41,6 +43,8 @@ export class TouchpadCard extends LitElement {
       hass: { type: Object },
       /** Card configuration object containing all settings and options */
       config: { type: Object },
+      /** Browser-ready URL for the overlay image, resolved from the configured value */
+      _resolvedImage: { state: true },
     };
   }
 
@@ -129,6 +133,37 @@ export class TouchpadCard extends LitElement {
     const overlay = this.config?.touchpad?.overlay;
     const entities = [overlay?.text?.entity, overlay?.graphics?.icon?.entity];
     return entities.some(id => id && oldHass.states[id] !== this.hass.states[id]);
+  }
+
+  /**
+   * Resolves the overlay image before rendering, the same way the core picture card does.
+   * The image picker saves an object with a media_content_id; older configs hold a plain
+   * path or URL. A media-source id is resolved to a playable URL through Home Assistant.
+   *
+   * @param {Map<string, unknown>} changedProperties - Changed properties map
+   * @returns {void}
+   * @override
+   */
+  willUpdate(changedProperties) {
+    super.willUpdate(changedProperties);
+    if (!changedProperties.has('config') && !changedProperties.has('hass')) return;
+    const value = this.config?.touchpad?.overlay?.graphics?.image?.image;
+    const image: string | undefined = typeof value === 'object' && value ? value.media_content_id : value;
+    if (image === this._resolvingImage) return;
+    if (typeof image === 'string' && image.startsWith('media-source://')) {
+      if (!this.hass) return;
+      this._resolvingImage = image;
+      this._resolvedImage = undefined;
+      this.hass
+        .callWS({ type: 'media_source/resolve_media', media_content_id: image })
+        .then((result) => {
+          if (this._resolvingImage === image) this._resolvedImage = result.url;
+        })
+        .catch((error) => console.error('TouchpadCard: Could not resolve the overlay image:', error));
+    } else {
+      this._resolvingImage = image;
+      this._resolvedImage = image;
+    }
   }
 
   /**
@@ -1048,14 +1083,14 @@ export class TouchpadCard extends LitElement {
       return html``;
     }
     const graphicsIcon = this.getGraphicIcon();
-    const image = graphics.image ?? {};
+    const imageUrl = this._resolvedImage ? this.hass?.hassUrl?.(this._resolvedImage) ?? this._resolvedImage : undefined;
     return html`
       <div class="graphics-container">
         ${(graphicsMode === 'icon' || graphicsMode === 'both') && graphicsIcon ? html`
           <ha-icon class="graphics-icon" icon="${graphicsIcon}"></ha-icon>
         ` : ''}
-        ${(graphicsMode === 'image' || graphicsMode === 'both') && image.image ? html`
-          <img class="graphics-image" src="${image.image}" alt="Graphics Image" />
+        ${(graphicsMode === 'image' || graphicsMode === 'both') && imageUrl ? html`
+          <img class="graphics-image" src="${imageUrl}" alt="Graphics Image" />
         ` : ''}
       </div>
     `;

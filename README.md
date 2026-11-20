@@ -146,7 +146,7 @@ touchpad: # Main touchpad styling
         color: yellow # Icon color
         opacity: 80 # Icon opacity (0-100%)
       image: # Image (mode = image or both)
-        image: "/local/my-image.png" # Image path
+        image: "/local/my-image.png" # Path, URL, or media item picked in the editor
         scale: 100 # Image scale (0-200%)
         opacity: 50 # Image opacity (0-100%)
 
