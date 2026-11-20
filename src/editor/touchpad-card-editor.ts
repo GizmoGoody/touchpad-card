@@ -21,7 +21,8 @@ export class TouchpadCardEditor extends LitElement {
   static TEXT_SELECTOR = { text: {} };
   static TEXT_MULTILINE_SELECTOR = { text: { multiline: true } };
   static ICON_SELECTOR = { icon: {} };
-  static IMAGE_SELECTOR = { image: { debounce: 1000 } };
+  // Same picker as the core picture card: upload, browse media, or enter a URL
+  static IMAGE_SELECTOR = { media: { accept: ['image/*'], image_upload: true, hide_content_type: true } };
   static ENTITY_SELECTOR = { entity: {} };
   static INPUT_TEXT_ENTITY_SELECTOR = { entity: { domain: "input_text" } };
   static UI_ACTION_SELECTOR = { 'ui_action': { default_action: 'none' } };
@@ -917,13 +918,29 @@ export class TouchpadCardEditor extends LitElement {
    * Renders the configuration form
    * @returns {import('lit').TemplateResult} Lit-html template for editor form
    */
+  /**
+   * Returns the config as the form expects it. The image picker reads an object, so an
+   * older plain path or URL is wrapped as a media_content_id, as the core picture card does.
+   *
+   * @param {Object} config - Current card configuration
+   * @returns {Object} Form data
+   * @static
+   */
+  static _formData(config) {
+    const image = config?.touchpad?.overlay?.graphics?.image?.image;
+    if (typeof image !== 'string') return config ?? {};
+    const data = structuredClone(config);
+    data.touchpad.overlay.graphics.image.image = { media_content_id: image };
+    return data;
+  }
+
   render() {
     if (!this.hass) return html``;
     return html`
       <div class="editor-container">
         <ha-form
           .hass=${this.hass}
-          .data=${this.config ?? {}}
+          .data=${TouchpadCardEditor._formData(this.config)}
           .schema=${TouchpadCardEditor.getConfigSchema(this.config ?? {})}
           .computeLabel=${this._computeLabel}
           .computeHelper=${this._computeHelper}
